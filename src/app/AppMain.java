@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -21,6 +22,7 @@ public class AppMain {
 	private final String dbname = "TPS_database";
 	//update
 	private static ArrayList<Employee> employees = new ArrayList<Employee>(); 
+	private static Employee loggedin;
 	
 	public static void main(String[] args) 
 	{
@@ -74,16 +76,16 @@ public class AppMain {
 			System.out.println("Enter new employee's address: \n");
 			String address = sc.nextLine();
 			
-			System.out.println("Enter new employee's National insurance number: \n");
+			System.out.println("Enter new employee's National insurance number without spaces: \n");
 			String ninum = sc.nextLine();
 			
-			System.out.println("Enter new employee's IBAN : \n ");
+			System.out.println("Enter new employee's IBAN without spaces: \n ");
 			String iban = sc.nextLine();
 			
-			System.out.println("Enter new employee's BIC : \n ");
+			System.out.println("Enter new employee's BIC without spaces: \n ");
 			String bic = sc.nextLine();
 			
-			System.out.println("Enter new employee's starting salary: \n"); 
+			System.out.println("Enter new employee's starting salary like 12000.0: \n"); 
 			float salary = sc.nextFloat();
 			
 			newEmp = new Employee(salary,name,ninum,address,iban, bic);
@@ -107,6 +109,8 @@ public class AppMain {
 			System.out.println("\nGoodbye!");
 			System.exit(0);
 			break;
+		case 4:
+			login();
 		}
 		
 		runInterface();
@@ -114,26 +118,46 @@ public class AppMain {
 		sc.close();
 	}
 	
+	private static void login() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter users id:");
+		int id = sc.nextInt();
+		
+		System.out.println("Enter name:");
+		String name = sc.nextLine();
+		
+		System.out.println(id + name);
+		
+		boolean found = false;
+		for (Object x : getEmployees(conn)) {
+			Employee emp = (Employee) x;
+			if (emp.getName() == name && emp.getNumber() == id) {
+				found = true;
+				loggedin = emp;
+			}
+		}
+		
+		if (found) {
+			System.out.println("Successfully logged in!");
+		} else {
+			System.out.println("Access denied!");
+		}
+		
+	}
+
 	private static void departmentReport() {
 		try {
 
             Statement st = conn.createStatement();
-
             ResultSet rs = st.executeQuery("CALL employeesPerDepartment()");
 
-      
-
             while (rs.next()) {
-
                     Department dept = new Department(rs.getString("department"), rs.getInt("COUNT(*)"));
                     System.out.println(dept);
-
             }
 
         } catch (SQLException e) {
-
             e.printStackTrace();
-
         }
 		
 	}
@@ -150,23 +174,23 @@ public class AppMain {
 	}
 
 	// gets list of employees from sql (CHANGE) 
-	private static void getEmployees(Connection conn)
+	private static List getEmployees(Connection conn)
 	{
-	
+		ArrayList<Employee> emps = new ArrayList<Employee>();
 		try {
-			
-			
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(
 			                "SELECT * FROM employee");
 		
 			while (rs.next()) {
-			       // Employee dbEmp = new Employee(rs.getInt("number"), rs.getFloat("salary"), rs.getString("name"));
-			        // employees.add(dbEmp);
+//				new Employee(salary,name,ninum,address,iban, bic);
+				Employee dbEmp = new Employee(rs.getFloat("salary"), rs.getString("name"), rs.getString("NiN"), rs.getString("address"), rs.getString("iBan"), rs.getString("bic"));
+			    emps.add(dbEmp);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return emps;
 	}
 	
 	private static void printElements(Collection col) {
