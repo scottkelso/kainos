@@ -1,7 +1,6 @@
 package app;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,6 +13,8 @@ import java.util.Properties;
 import java.util.Scanner;
 
 import employee_stuff.Employee;
+import employee_stuff.DepartmentEnum;
+import employee_stuff.SalesEmployee;
 
 public class AppMain {
 
@@ -21,6 +22,7 @@ public class AppMain {
 	private final String dbname = "TPS_database";
 	//update
 	private static ArrayList<Employee> employees = new ArrayList<Employee>(); 
+	private static ArrayList<SalesEmployee> salesEmployee = new ArrayList<SalesEmployee>();
 	
 	public static void main(String[] args) 
 	{
@@ -103,7 +105,11 @@ public class AppMain {
 			departmentReport();
 			
 			break;
-		case 3:
+		case 4:
+			
+			
+			break;
+		case 5:
 			System.out.println("\nGoodbye!");
 			System.exit(0);
 			break;
@@ -124,7 +130,6 @@ public class AppMain {
       
 
             while (rs.next()) {
-
                     Department dept = new Department(rs.getString("department"), rs.getInt("COUNT(*)"));
                     System.out.println(dept);
 
@@ -161,8 +166,11 @@ public class AppMain {
 			                "SELECT * FROM employee");
 		
 			while (rs.next()) {
-			       // Employee dbEmp = new Employee(rs.getInt("number"), rs.getFloat("salary"), rs.getString("name"));
-			        // employees.add(dbEmp);
+				
+			  Employee dbEmp; // = new Employee(rs.getInt("number"), rs.getFloat("salary"), rs.getString("name"));
+			
+				
+			   // employees.add(dbEmp);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
