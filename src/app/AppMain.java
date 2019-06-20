@@ -37,11 +37,15 @@ public class AppMain {
 				conn = getConnection();
 				
 				Statement st = conn.createStatement();
+//				ResultSet rs = st.executeQuery(
+//		                "SELECT emp_no AS `number`, "
+//		                + "CONCAT_WS (' ', first_name, last_name) AS `name`, "
+//		                + "salary FROM employees JOIN salaries USING(emp_no) "
+//		                + "WHERE to_date > NOW() AND salary = 100000");
 				ResultSet rs = st.executeQuery(
-				                "SELECT emp_no AS `number`, "
-				                + "CONCAT_WS (' ', first_name, last_name) AS `name`, "
-				                + "salary FROM employees JOIN salaries USING(emp_no) "
-				                + "WHERE to_date > NOW() AND salary = 100000");
+		                "SELECT * "
+						+ "FROM employee "
+		                + "WHERE salary > 5000");
 			
 				while (rs.next()) {
 				        Employee dbEmp = new Employee(rs.getInt("number"), rs.getFloat("salary"), rs.getString("name"));
@@ -93,8 +97,8 @@ public class AppMain {
 			throw new IllegalArgumentException(
 					"Properties file must exist and must contain user, password, and host properties");
 		}
-	
-		return conn = DriverManager.getConnection("jdbc:mysql://" + host + "/employees?useSSL=false", user, password);
+
+		return conn = DriverManager.getConnection("jdbc:mysql://" + host + "/TPS_database?useSSL=false", user, password);
 	}
 
 }

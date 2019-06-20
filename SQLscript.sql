@@ -1,4 +1,6 @@
+DROP DATABSE IF EXISTAS TPS_database;
 CREATE DATABASE TPS_database;
+USE TPS_database;
 
 CREATE TABLE employee (
 	employeeID int unsigned PRIMARY KEY auto_increment,
@@ -10,6 +12,10 @@ CREATE TABLE employee (
     salary decimal(10,2),
     department enum('sales', 'finance', 'hr', 'developer')
 );
+
+--DROP USER IF EXISTS 'admin'@'localhost';
+--create user 'admin'@'localhost' identified with mysql_native_password by '****';
+--grant all on TPS_database.* to admin@localhost;
 
 -- sales employee table
 
