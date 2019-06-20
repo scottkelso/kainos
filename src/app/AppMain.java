@@ -1,7 +1,6 @@
 package app;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,6 +15,7 @@ import java.util.Properties;
 import java.util.Scanner;
 
 import employee_stuff.Employee;
+import employee_stuff.SalesEmployee;
 
 public class AppMain {
 
@@ -23,7 +23,11 @@ public class AppMain {
 	private final String dbname = "TPS_database";
 	//update
 	private static ArrayList<Employee> employees = new ArrayList<Employee>(); 
+
 	private static Employee loggedin;
+
+	private static ArrayList<SalesEmployee> salesEmployee = new ArrayList<SalesEmployee>();
+
 	
 	public static void main(String[] args) 
 	{
@@ -249,6 +253,15 @@ public class AppMain {
 		int success = st.executeUpdate(query);
 //		System.out.println(success);
 	}
+	
+	private static void addSalesEmployee(SalesEmployee newSalEmp) throws SQLException {
+		Statement st = conn.createStatement();
+		String query = "INSERT INTO salesEmployee (employeeID, commissionRate, salesTotal)\n" + 
+		"VALUES ('" + newSalEmp.getNumber() + "', '" + newSalEmp.getCommissionRate() + "', '" + newSalEmp.getSalesTotal() + ");";
+		System.out.println(query);
+		int success = st.executeUpdate(query);
+		System.out.println(success);
+	}
 
 	// gets list of employees from sql (CHANGE) 
 	private static List getEmployees(Connection conn)
@@ -260,7 +273,6 @@ public class AppMain {
 			                "SELECT * FROM employee");
 		
 			while (rs.next()) {
-//				new Employee(salary,name,ninum,address,iban, bic);
 				Employee dbEmp = new Employee(rs.getFloat("salary"), rs.getString("name"), rs.getString("NiN"), rs.getString("address"), rs.getString("iBan"), rs.getString("bic"));
 			    emps.add(dbEmp);
 			}
