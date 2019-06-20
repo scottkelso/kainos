@@ -63,6 +63,7 @@ public class AppMain {
 		case 1:
 			//HR password 
 			Employee newEmp;
+
 			
 			System.out.println("Add new employee \n\n");
 			
@@ -152,8 +153,8 @@ public class AppMain {
 			throw new IllegalArgumentException(
 					"Properties file must exist and must contain user, password, and host properties");
 		}
-	
-		return conn = DriverManager.getConnection("jdbc:mysql://" + host + "/employees?useSSL=false", user, password);
+
+		return conn = DriverManager.getConnection("jdbc:mysql://" + host + "/TPS_database?useSSL=false", user, password);
 	}
 
 }
