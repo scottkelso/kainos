@@ -1,5 +1,5 @@
 package employee_stuff;
 
-public enum Department {
+public enum DepartmentEnum {
 	HR, FINANCE, DEVELOPER, SALES
 }
