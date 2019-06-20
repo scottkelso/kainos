@@ -3,29 +3,11 @@ package employee_stuff;
 public class SalesEmployee extends Employee {
 	
 	private float commissionRate, salesTotal;
-
-	public SalesEmployee() {
-		setupSalesEmployee();
-	}
-
-	public SalesEmployee(int number) {
-		super(number);
-		setupSalesEmployee();
-	}
-
-	public SalesEmployee(int number, float salary) {
-		super(number, salary);
-		setupSalesEmployee();
-	}
-
-	public SalesEmployee(int number, float salary, String name) {
-		super(number, salary, name);
-		setupSalesEmployee();
-	}
-
-	public SalesEmployee(Employee emp) {
-		super(emp);
-		setupSalesEmployee();
+	
+	public SalesEmployee(float salary, String name, String nationalInsurance, String address, String iban, String bic) {
+		super(salary, name, nationalInsurance, address, iban, bic);
+		setCommissionRate(commissionRate);
+		setSalesTotal(salesTotal);
 	}
 
 	private void setupSalesEmployee() {
