@@ -8,6 +8,8 @@ public class Employee implements IPayable, Comparable<Employee> {
 	private String nationalInsurance;
 	private String address;
 	private String bankDetails;
+	private String iban;
+	private String bic;
 	private Department department;
 	
 	private final int MIN_SALARY = 7000;
@@ -25,20 +27,24 @@ public class Employee implements IPayable, Comparable<Employee> {
 		setSalary(salary);
 	}
 	
-	public Employee(int number, float salary, String name, String nationalInsurance, String address, String bankDetails) {
+	public Employee(int number, float salary, String name, String nationalInsurance, String address, String iban, String bic) {
 		this(number, salary);
 		setName(name);
 		setNationalInsurance(nationalInsurance);
 		setAddress(address);
 		setBankDetails(bankDetails);
+		this.iban = iban;
+		this.bic = bic;
 	}
 	
-	public Employee(float salary, String name, String nationalInsurance, String address, String bankDetails) {
+	public Employee(float salary, String name, String nationalInsurance, String address, String iban, String bic) {
 //		this(number, salary);
+		setSalary(salary);
 		setName(name);
 		setNationalInsurance(nationalInsurance);
 		setAddress(address);
-		setBankDetails(bankDetails);
+		setIban(iban);
+		setBic(bic);
 	}
 	
 	/*public Employee(Employee emp) {
@@ -76,12 +82,8 @@ public class Employee implements IPayable, Comparable<Employee> {
 	}
 
 	public boolean setSalary(float salary) {
-		if (salary <= MIN_SALARY) {
-			this.salary = salary;
-			return true;
-		} else {
-			return false;
-		}
+		this.salary = salary;
+		return true;
 	}
 
 	public String getName() {
@@ -146,6 +148,22 @@ public class Employee implements IPayable, Comparable<Employee> {
 
 	public void setDepartment(Department department) {
 		this.department = department;
+	}
+
+	public String getIban() {
+		return iban;
+	}
+
+	public void setIban(String iban) {
+		this.iban = iban;
+	}
+
+	public String getBic() {
+		return bic;
+	}
+
+	public void setBic(String bic) {
+		this.bic = bic;
 	}
 	
 }

@@ -77,13 +77,16 @@ public class AppMain {
 			System.out.println("Enter new employee's National insurance number: \n");
 			String ninum = sc.nextLine();
 			
-			System.out.println("Enter new employee's IBAN/BIC : \n ");
-			String bankDetails = sc.nextLine();
+			System.out.println("Enter new employee's IBAN : \n ");
+			String iban = sc.nextLine();
+			
+			System.out.println("Enter new employee's BIC : \n ");
+			String bic = sc.nextLine();
 			
 			System.out.println("Enter new employee's starting salary: \n"); 
 			float salary = sc.nextFloat();
 			
-			newEmp = new Employee(salary,name,ninum,address,bankDetails);
+			newEmp = new Employee(salary,name,ninum,address,iban, bic);
 			employees.add(newEmp);
 			System.out.println("New user details \n" + newEmp);
 			
@@ -139,8 +142,8 @@ public class AppMain {
 		
 		Statement st = conn.createStatement();
 		String query = "INSERT INTO employee (name, address, NiN, iBan, bic, salary, department)\n" + 
-		"VALUES ('" + newEmp.getName() + "', '" + newEmp.getAddress() + "', '" + newEmp.getNationalInsurance() + "', '" + newEmp.getBankDetails() + "', '"
-				+ newEmp.getBankDetails() + "', " + newEmp.getSalary() + ", 'hr');";
+		"VALUES ('" + newEmp.getName() + "', '" + newEmp.getAddress() + "', '" + newEmp.getNationalInsurance() + "', '" + newEmp.getIban() + "', '"
+				+ newEmp.getBic() + "', " + newEmp.getSalary() + ", 'hr');";
 		System.out.println(query);
 		int success = st.executeUpdate(query);
 		System.out.println(success);
