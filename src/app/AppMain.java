@@ -314,7 +314,7 @@ public class AppMain {
             ResultSet rs = st.executeQuery("CALL employeesPerDepartment()");
 
             while (rs.next()) {
-                    Department dept = new Department(rs.getString("department"), rs.getInt("COUNT(*)"));
+                    Department dept = new Department(rs.getString("department"), rs.getInt("employeeCount"));
                     System.out.println(dept);
             }
 
