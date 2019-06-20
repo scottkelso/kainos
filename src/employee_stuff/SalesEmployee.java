@@ -9,6 +9,12 @@ public class SalesEmployee extends Employee {
 		setCommissionRate(commissionRate);
 		setSalesTotal(salesTotal);
 	}
+	
+	public SalesEmployee(int number, float commissionRate, float salesTotal) {
+		super(number);
+		setCommissionRate(commissionRate);
+		setSalesTotal(salesTotal);
+	}
 
 	private void setupSalesEmployee() {
 		this.commissionRate = 0.015f;

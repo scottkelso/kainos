@@ -119,6 +119,38 @@ public class AppMain {
 		case 5:
 			System.out.println("Size: " + salesEmployee.size());
 			break;
+		case 6:
+			SalesEmployee newSalesEmp;
+
+			
+			System.out.println("Add new sales employee \n\n");
+			
+			System.out.println("Enter employee ID: \n");
+			String number = sc.next();
+			sc.nextLine();
+			
+			System.out.println("Enter sales employee commission rate: \n");
+			String commissionRate = sc.nextLine();
+			
+			System.out.println("Enter sales employee's total sales: \n");
+			String totalSales = sc.nextLine();
+		
+			int numberInt = Integer.parseInt(number);
+		    float cR = Float.valueOf(commissionRate.trim()).floatValue();
+		    float sT = Float.valueOf(totalSales.trim()).floatValue();
+			
+			newSalesEmp = new SalesEmployee(numberInt, cR, sT);
+			
+			//SQL stuff
+			try {
+				addSalesUser(newSalesEmp, numberInt);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			break;
+
 		}
 		
 		runInterface();
@@ -179,6 +211,23 @@ public class AppMain {
 		System.out.println(query);
 		int success = st.executeUpdate(query);
 		System.out.println(success);
+	}
+	
+	private static void addSalesUser(SalesEmployee newSalesEmp, int employeeNumber) throws SQLException {
+		getEmployees(conn);
+		for (Object x : employees) {
+			Employee emp = (Employee) x;
+			if (emp.getNumber() == employeeNumber) {
+				Statement st = conn.createStatement();
+				String query = "INSERT INTO salesEmployee (employeeID, commissionRate, salesTotal)\n" + 
+				"VALUES ('" + newSalesEmp.getNumber() + "', '" + newSalesEmp.getCommissionRate() + "', '" + newSalesEmp.getSalesTotal() + "', '" + newSalesEmp.getIban() + ");";
+				int success = st.executeUpdate(query);
+				System.out.println(success);
+			}
+		}
+		
+		
+
 	}
 
 	// gets list of employees from sql (CHANGE) 
