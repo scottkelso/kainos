@@ -112,23 +112,42 @@ public class AppMain {
 			System.out.println("Enter new employee's National insurance number without spaces: \n");
 			String ninum = sc.nextLine();
 			
-			while (ninum.length() < 8 || ninum.length() > 13 ) {
-				System.out.println("name must be greater than 8 and less than 14.");
+//			while (ninum.length() > 34 || !checkNiNUniquness(ninum)) {
+//				if (ninum.length() > 34) {
+//					System.out.println("National insurence number has to be between 8 and 13 characters and must have the correct suffix letter.");
+//				} else if (!checkNiNUniquness(ninum)) {
+//					System.out.println("That national insurance number is not unique!");
+//				}
+//				System.out.println("Enter new employee's National insurance number without spaces: \n");
+//				ninum = sc.nextLine();
+//			};
+//			
+			while (ninum.length() > 34) {
+				System.out.println("National insurence number has to be between 8 and 13 characters and must have the correct suffix letter.");
 				System.out.println("Enter new employee's National insurance number without spaces: \n");
 				ninum = sc.nextLine();
 			};
 			
 			
+			
 			System.out.println("Enter new employee's IBAN without spaces: \n ");
 			String iban = sc.nextLine();
+			
+//			while (iban.length() > 34 || !checkIbanUniquness(iban)) {
+//				if (iban.length() > 34) {
+//					System.out.println("IBAN must be 34 characters long");
+//				} else if (!checkIbanUniquness(iban)) {
+//					System.out.println("That IBAN code number is not unique!");
+//				}
+//				System.out.println("Enter new employee's IBAN without spaces: \n ");
+//				iban = sc.nextLine();
+//			};
 			
 			while (iban.length() > 34) {
 				System.out.println("IBAN must be 34 characters long");
 				System.out.println("Enter new employee's IBAN without spaces: \n ");
 				iban = sc.nextLine();
 			};
-			
-			
 			
 			System.out.println("Enter new employee's BIC without spaces: \n ");
 			String bic = sc.nextLine();
@@ -151,13 +170,13 @@ public class AppMain {
 				runInterface();
 			}
 			
-			while (salary < 0.0f) {
+			while (salary < 0.0f && salary > 1e8) {
 				try {
 					 salary = sc.nextFloat();
 				}
 				catch(Exception e)
 				{
-					System.out.println("Invalid number entered must be a two digit decimal number.");
+					System.out.println("Invalid number entered must be a two digit decimal number less than 100 million.");
 					runInterface();
 				}
 			}
@@ -166,13 +185,16 @@ public class AppMain {
 			employees.add(newEmp);
 			System.out.println("New user details \n" + newEmp);
 			
+			
+			
 			//SQL stuff
 			try {
 				addUser(newEmp);
 			} catch (SQLIntegrityConstraintViolationException e) {
 				System.out.println("WARNING!");
-				System.out.println("This national insurance number is already in use!");
+				System.out.println("The national insurance or IBAN code is already in use!");
 				System.out.println("");
+				e.printStackTrace();
 				runInterface();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -198,6 +220,33 @@ public class AppMain {
 	}
 	
 
+
+	private static boolean checkIbanUniquness(String iban) {
+		try {
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE iBan = '" + iban + "';");
+			return (rs == null);
+		} catch (SQLException e) {
+			e.printStackTrace(); 
+		}
+		return false;
+	}
+
+	private static boolean checkNiNUniquness(String ninum) {
+		try {
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE NiN = '" + ninum + "';");
+			return (rs == null);
+		} catch (SQLException e) {
+			e.printStackTrace(); 
+		}
+		return false;
+	}
+
+	private static boolean ninVal(String ninum) {
+		String x = ninum.substring(ninum.length() - 1).toLowerCase();
+		return x.equals("a") || x.equals("b") || x.equals("c") || x.equals("d") || x.equals("f") || x.equals("m") || x.equals("p") ;
+	}
 
 	private static void login() {
 		Scanner sc = new Scanner(System.in);
