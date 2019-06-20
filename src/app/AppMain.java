@@ -51,7 +51,7 @@ public class AppMain {
 		
 		// Basic I/O for spike demo
 		System.out.println("Welcome to the sprint 1 demo!\n\n");
-		System.out.println("Select option \n1 - Add new employee \n2 - exit");
+		System.out.println("Select option \n1 - Add new employee \n2 - Department Report\n3 - exit");
 		getEmployees(conn);
 				
 		//input 
@@ -67,11 +67,9 @@ public class AppMain {
 			
 			System.out.println("Add new employee \n\n");
 			
-			System.out.println("Enter new employee ID: \n");
-			int newID = sc.nextInt();
-			
 			System.out.println("Enter new employee name: \n");
-			String name = sc.nextLine();
+			String name = sc.next();
+			sc.nextLine();
 			
 			System.out.println("Enter new employee's address: \n");
 			String address = sc.nextLine();
@@ -85,14 +83,24 @@ public class AppMain {
 			System.out.println("Enter new employee's starting salary: \n"); 
 			float salary = sc.nextFloat();
 			
-			newEmp = new Employee(newID,salary,name,ninum,address,bankDetails);
+			newEmp = new Employee(salary,name,ninum,address,bankDetails);
 			employees.add(newEmp);
 			System.out.println("New user details \n" + newEmp);
 			
 			//SQL stuff
+			try {
+				addUser(newEmp);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			break;
 		case 2:
+			departmentReport();
+			
+			break;
+		case 3:
 			System.out.println("\nGoodbye!");
 			System.exit(0);
 			break;
@@ -103,6 +111,41 @@ public class AppMain {
 		sc.close();
 	}
 	
+	private static void departmentReport() {
+		try {
+
+            Statement st = conn.createStatement();
+
+            ResultSet rs = st.executeQuery("CALL employeesPerDepartment()");
+
+      
+
+            while (rs.next()) {
+
+                    Department dept = new Department(rs.getString("department"), rs.getInt("COUNT(*)"));
+                    System.out.println(dept);
+
+            }
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+
+        }
+		
+	}
+
+	private static void addUser(Employee newEmp) throws SQLException {
+		
+		Statement st = conn.createStatement();
+		String query = "INSERT INTO employee (name, address, NiN, iBan, bic, salary, department)\n" + 
+		"VALUES ('" + newEmp.getName() + "', '" + newEmp.getAddress() + "', '" + newEmp.getNationalInsurance() + "', '" + newEmp.getBankDetails() + "', '"
+				+ newEmp.getBankDetails() + "', " + newEmp.getSalary() + ", 'hr');";
+		System.out.println(query);
+		int success = st.executeUpdate(query);
+		System.out.println(success);
+	}
+
 	// gets list of employees from sql (CHANGE) 
 	private static void getEmployees(Connection conn)
 	{
@@ -112,11 +155,7 @@ public class AppMain {
 			
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(
-			                "SELECT emp_no AS `number`, "
-			                + "CONCAT_WS (' ', first_name, last_name) AS `name`, " 
-			                + ","
-			                + "salary FROM employees JOIN salaries USING(emp_no) "
-			                + "WHERE to_date > NOW() AND salary = 100000");
+			                "SELECT * FROM employee");
 		
 			while (rs.next()) {
 			       // Employee dbEmp = new Employee(rs.getInt("number"), rs.getFloat("salary"), rs.getString("name"));

@@ -8,12 +8,13 @@ public class Employee implements IPayable, Comparable<Employee> {
 	private String nationalInsurance;
 	private String address;
 	private String bankDetails;
+	private Department department;
 	
 	private final int MIN_SALARY = 7000;
 	
-	public Employee() {
-		this.number = -1;
-	}
+//	public Employee() {
+//		this.number = -1;
+//	}
 	
 	public Employee(int number) {
 		setNumber(number);
@@ -26,6 +27,14 @@ public class Employee implements IPayable, Comparable<Employee> {
 	
 	public Employee(int number, float salary, String name, String nationalInsurance, String address, String bankDetails) {
 		this(number, salary);
+		setName(name);
+		setNationalInsurance(nationalInsurance);
+		setAddress(address);
+		setBankDetails(bankDetails);
+	}
+	
+	public Employee(float salary, String name, String nationalInsurance, String address, String bankDetails) {
+//		this(number, salary);
 		setName(name);
 		setNationalInsurance(nationalInsurance);
 		setAddress(address);
@@ -129,6 +138,14 @@ public class Employee implements IPayable, Comparable<Employee> {
 
 	public void setBankDetails(String bankDetails) {
 		this.bankDetails = bankDetails;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 	
 }

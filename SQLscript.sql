@@ -34,9 +34,9 @@ END //
 
 DELIMITER ;
 
---DROP USER IF EXISTS 'admin'@'localhost';
---create user 'admin'@'localhost' identified with mysql_native_password by '****';
---grant all on TPS_database.* to admin@localhost;
+-- DROP USER IF EXISTS 'admin'@'localhost';
+-- create user 'admin'@'localhost' identified with mysql_native_password by '****';
+-- grant all on TPS_database.* to admin@localhost;
 
 -- sales employee table
 
