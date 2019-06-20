@@ -1,7 +1,6 @@
 package app;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,6 +14,8 @@ import java.util.Properties;
 import java.util.Scanner;
 
 import employee_stuff.Employee;
+import employee_stuff.DepartmentEnum;
+import employee_stuff.SalesEmployee;
 
 public class AppMain {
 
@@ -22,7 +23,11 @@ public class AppMain {
 	private final String dbname = "TPS_database";
 	//update
 	private static ArrayList<Employee> employees = new ArrayList<Employee>(); 
+
 	private static Employee loggedin;
+
+	private static ArrayList<SalesEmployee> salesEmployee = new ArrayList<SalesEmployee>();
+
 	
 	public static void main(String[] args) 
 	{
