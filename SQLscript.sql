@@ -40,6 +40,36 @@ ADD CONSTRAINT chk_sales
 INSERT INTO salesEmployee(employeeID, commissionRate, salesTotal)
 VALUES (1, 0.30, 60000.00); 
 -- project table
+CREATE TABLE project (
+	projectID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    projectName varchar(30) NOT NULL,
+    projectManager INT UNSIGNED,
+    FOREIGN KEY (`projectManager`)
+		REFERENCES employee(`employeeID`)
+);
+
+CREATE TABLE employee_project (
+	employeeID INT UNSIGNED,
+    projectID INT UNSIGNED,
+    startDate DATE NOT NULL DEFAULT (CURRENT_DATE),
+    PRIMARY KEY (`employeeID`, `projectID`),
+    FOREIGN KEY (`employeeID`)
+		REFERENCES employee(`employeeID`),
+	FOREIGN KEY (`projectID`)
+		REFERENCES project(`projectID`)
+);
+
+CREATE TABLE Previous_Employee_Project (
+	employeeID INT unsigned,
+    projectID INT unsigned,
+    startDate DATE NOT NULL DEFAULT (CURRENT_DATE),
+	finishDate DATE NOT NULL DEFAULT (CURRENT_DATE),
+    PRIMARY KEY(`employeeID`, `projectID`, `startDate`),
+    FOREIGN KEY(`employeeID`)
+		REFERENCES employee(`employeeID`),
+	FOREIGN KEY(`projectID`)
+		REFERENCES project(`projectID`)
+);
 
 
 -- POSSIBLE: department table
@@ -72,6 +102,13 @@ BEGIN
 	SELECT e.employeeID
     FROM employee e
     WHERE department = "sales";
+END //
+
+CREATE TRIGGER Tr_Delete_Employee_Project
+	BEFORE DELETE ON `employee_project` FOR each row
+BEGIN
+	INSERT INTO `previous_employee_project`(EmployeeID, ProjectID, StartDate, FinishDate)
+    VALUES (OLD.employeeID, OLD.projectID, OLD.startDate, Default);
 END //
 
 DELIMITER ;
