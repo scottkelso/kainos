@@ -1,7 +1,5 @@
 package employee_stuff;
 
-import com.kainos.ea.Hello;
-
 public class Employee implements IPayable, Comparable<Employee> {
 
 	private int number;

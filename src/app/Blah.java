@@ -12,16 +12,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Properties;
-import java.util.logging.Logger;
 
-import employee_stuff.BadNumber;
-import employee_stuff.Consultant;
 import employee_stuff.Employee;
-import employee_stuff.SalesEmployee;
-import employee_stuff.employee_payroll.PayrollSystem;
 
-public class Hello {
-	
+public class Blah {
+
+
 	private static Connection conn;
 
 	public static void main(String[] args) {
@@ -98,6 +94,5 @@ public class Hello {
 	
 		return conn = DriverManager.getConnection("jdbc:mysql://" + host + "/employees?useSSL=false", user, password);
 	}
-	
-}
 
+}
