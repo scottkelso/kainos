@@ -14,7 +14,6 @@ import java.util.Properties;
 import java.util.Scanner;
 
 import employee_stuff.Employee;
-import employee_stuff.DepartmentEnum;
 import employee_stuff.SalesEmployee;
 
 public class AppMain {

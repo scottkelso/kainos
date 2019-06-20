@@ -1,5 +1,7 @@
 package employee_stuff;
 
+import app.Department;
+
 public class Employee implements IPayable, Comparable<Employee> {
 
 	private int number;
@@ -10,7 +12,7 @@ public class Employee implements IPayable, Comparable<Employee> {
 	private String bankDetails;
 	private String iban;
 	private String bic;
-	private DepartmentEnum department;
+	private Department department;
 	
 	private final int MIN_SALARY = 7000;
 	
@@ -142,11 +144,11 @@ public class Employee implements IPayable, Comparable<Employee> {
 		this.bankDetails = bankDetails;
 	}
 
-	public DepartmentEnum getDepartment() {
+	public Department getDepartment() {
 		return department;
 	}
 
-	public void setDepartment(DepartmentEnum department) {
+	public void setDepartment(Department department) {
 		this.department = department;
 	}
 
