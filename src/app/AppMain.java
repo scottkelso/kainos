@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
+import employee_stuff.DepartmentEnum;
 import employee_stuff.Employee;
 import employee_stuff.SalesEmployee;
 
@@ -63,23 +63,7 @@ public class AppMain {
 				
 		//input 
 		Scanner sc = new Scanner(System.in);
-		
-		int option = 0;
-		try {
-			option = sc.nextInt();
-		} catch (Exception e) {
-			System.out.println("That is an invalid entry.");
-		}
-		
-		while (option < 1 || option > 3 ) {
-			try {
-				sc.next();
-				System.out.println("Please enter a number between 1 and 3");
-				option = sc.nextInt();
-			} catch (Exception e) {
-				System.out.println("That is an invalid entry.");
-			}
-		}
+		int option = sc.nextInt();
 				
 		switch(option)
 		{
@@ -94,73 +78,20 @@ public class AppMain {
 			String name = sc.next();
 			sc.nextLine();
 			
-			while (name.length() == 0) {
-				System.out.println("name must be greater than 0.");
-				System.out.println("Enter new employee name: \n");
-				name = sc.next();
-			}
-			
 			System.out.println("Enter new employee's address: \n");
 			String address = sc.nextLine();
-			
-			while (address.length() == 0) {
-				System.out.println("name must be greater than 0.");
-				System.out.println("Enter new employee's address: \n");
-				address = sc.nextLine();
-			};
 			
 			System.out.println("Enter new employee's National insurance number without spaces: \n");
 			String ninum = sc.nextLine();
 			
-			while (ninum.length() < 8 || ninum.length() > 13 ) {
-				System.out.println("name must be greater than 8 and less than 14.");
-				System.out.println("Enter new employee's National insurance number without spaces: \n");
-				ninum = sc.nextLine();
-			};
-			
-			
 			System.out.println("Enter new employee's IBAN without spaces: \n ");
 			String iban = sc.nextLine();
-			
-			while (iban.length() > 34) {
-				System.out.println("IBAN must be 34 characters long");
-				System.out.println("Enter new employee's IBAN without spaces: \n ");
-				iban = sc.nextLine();
-			};
-			
-			
 			
 			System.out.println("Enter new employee's BIC without spaces: \n ");
 			String bic = sc.nextLine();
 			
-			while (bic.length() != 11) {
-				System.out.println("BIC must be 11 characters long.");
-				System.out.println("Enter new employee's BIC without spaces: \n ");
-				bic = sc.nextLine();
-			};
-			
 			System.out.println("Enter new employee's starting salary like 12000.0: \n"); 
-			float salary = -1;
-			
-			try {
-				 salary = sc.nextFloat();
-			}
-			catch(Exception e)
-			{
-				System.out.println("Invalid number entered must be a two digit decimal number.");
-				runInterface();
-			}
-			
-			while (salary < 0.0f) {
-				try {
-					 salary = sc.nextFloat();
-				}
-				catch(Exception e)
-				{
-					System.out.println("Invalid number entered must be a two digit decimal number.");
-					runInterface();
-				}
-			}
+			float salary = sc.nextFloat();
 			
 			newEmp = new Employee(salary,name,ninum,address,iban, bic);
 			employees.add(newEmp);
@@ -169,11 +100,6 @@ public class AppMain {
 			//SQL stuff
 			try {
 				addUser(newEmp);
-			} catch (SQLIntegrityConstraintViolationException e) {
-				System.out.println("WARNING!");
-				System.out.println("This national insurance number is already in use!");
-				System.out.println("");
-				runInterface();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -190,6 +116,9 @@ public class AppMain {
 			break;
 		case 4:
 			login();
+		case 5:
+			System.out.println("Size: " + salesEmployee.size());
+			break;
 		}
 		
 		runInterface();
@@ -197,8 +126,6 @@ public class AppMain {
 		sc.close();
 	}
 	
-
-
 	private static void login() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter users id:");
@@ -210,7 +137,7 @@ public class AppMain {
 		System.out.println(id + name);
 		
 		boolean found = false;
-		for (Object x : getEmployees(conn)) {
+		for (Object x : employees) {
 			Employee emp = (Employee) x;
 			if (emp.getName() == name && emp.getNumber() == id) {
 				found = true;
@@ -249,37 +176,58 @@ public class AppMain {
 		String query = "INSERT INTO employee (name, address, NiN, iBan, bic, salary, department)\n" + 
 		"VALUES ('" + newEmp.getName() + "', '" + newEmp.getAddress() + "', '" + newEmp.getNationalInsurance() + "', '" + newEmp.getIban() + "', '"
 				+ newEmp.getBic() + "', " + newEmp.getSalary() + ", 'hr');";
-//		System.out.println(query);
-		int success = st.executeUpdate(query);
-//		System.out.println(success);
-	}
-	
-	private static void addSalesEmployee(SalesEmployee newSalEmp) throws SQLException {
-		Statement st = conn.createStatement();
-		String query = "INSERT INTO salesEmployee (employeeID, commissionRate, salesTotal)\n" + 
-		"VALUES ('" + newSalEmp.getNumber() + "', '" + newSalEmp.getCommissionRate() + "', '" + newSalEmp.getSalesTotal() + ");";
 		System.out.println(query);
 		int success = st.executeUpdate(query);
 		System.out.println(success);
 	}
 
 	// gets list of employees from sql (CHANGE) 
-	private static List getEmployees(Connection conn)
+	private static void getEmployees(Connection conn)
 	{
-		ArrayList<Employee> emps = new ArrayList<Employee>();
+		
 		try {
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(
 			                "SELECT * FROM employee");
-		
-			while (rs.next()) {
+			
+			while (rs.next() ) {
+//				new Employee(salary,name,ninum,address,iban, bic);
 				Employee dbEmp = new Employee(rs.getFloat("salary"), rs.getString("name"), rs.getString("NiN"), rs.getString("address"), rs.getString("iBan"), rs.getString("bic"));
-			    emps.add(dbEmp);
+			    dbEmp.setNumber(rs.getInt("employeeID"));
+				dbEmp.setDepartment(DepartmentEnum.valueOf(rs.getString("department").toUpperCase()));
+				
+				employees.add(dbEmp);
 			}
+			
+			rs.close();
+			
+			for(Employee dbEmp : employees)
+			{
+				System.out.println("Department: " + dbEmp.getDepartment());
+				if(dbEmp.getDepartment() == DepartmentEnum.SALES)
+			    {
+			    	//SalesEmployee newSales = new (rs.getFloat("salary"), rs.getString("name"), rs.getString("NiN"), rs.getString("address"), rs.getString("iBan"), rs.getString("bic"));
+			    	float commissionRate, salesTotal;
+			    	ResultSet sales = st.executeQuery("SELECT * FROM salesEmployee WHERE employeeID = " + dbEmp.getNumber() + " ;");
+			    
+			    	sales.next();
+			    	salesTotal = sales.getFloat("salesTotal");
+			    	commissionRate = sales.getFloat("commissionRate");
+			    	
+			    	//new sales employeee
+			    	SalesEmployee newSales = new SalesEmployee(dbEmp.getSalary(), dbEmp.getName(), dbEmp.getNationalInsurance(), dbEmp.getAddress(), dbEmp.getIban(), dbEmp.getBic(),commissionRate,salesTotal );
+			    	newSales.setCommissionRate((float) commissionRate);
+			    	newSales.setSalesTotal(salesTotal);
+			    	
+			    	salesEmployee.add(newSales);
+			    	sales.close();
+			    }	
+			}
+			
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return emps;
 	}
 	
 	private static void printElements(Collection col) {
