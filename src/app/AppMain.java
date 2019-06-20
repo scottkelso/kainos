@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,7 +59,23 @@ public class AppMain {
 				
 		//input 
 		Scanner sc = new Scanner(System.in);
-		int option = sc.nextInt();
+		
+		int option = 0;
+		try {
+			option = sc.nextInt();
+		} catch (Exception e) {
+			System.out.println("That is an invalid entry.");
+		}
+		
+		while (option < 1 || option > 3 ) {
+			try {
+				sc.next();
+				System.out.println("Please enter a number between 1 and 3");
+				option = sc.nextInt();
+			} catch (Exception e) {
+				System.out.println("That is an invalid entry.");
+			}
+		}
 				
 		switch(option)
 		{
@@ -73,20 +90,73 @@ public class AppMain {
 			String name = sc.next();
 			sc.nextLine();
 			
+			while (name.length() == 0) {
+				System.out.println("name must be greater than 0.");
+				System.out.println("Enter new employee name: \n");
+				name = sc.next();
+			}
+			
 			System.out.println("Enter new employee's address: \n");
 			String address = sc.nextLine();
+			
+			while (address.length() == 0) {
+				System.out.println("name must be greater than 0.");
+				System.out.println("Enter new employee's address: \n");
+				address = sc.nextLine();
+			};
 			
 			System.out.println("Enter new employee's National insurance number without spaces: \n");
 			String ninum = sc.nextLine();
 			
+			while (ninum.length() < 8 || ninum.length() > 13 ) {
+				System.out.println("name must be greater than 8 and less than 14.");
+				System.out.println("Enter new employee's National insurance number without spaces: \n");
+				ninum = sc.nextLine();
+			};
+			
+			
 			System.out.println("Enter new employee's IBAN without spaces: \n ");
 			String iban = sc.nextLine();
+			
+			while (iban.length() > 34) {
+				System.out.println("IBAN must be 34 characters long");
+				System.out.println("Enter new employee's IBAN without spaces: \n ");
+				iban = sc.nextLine();
+			};
+			
+			
 			
 			System.out.println("Enter new employee's BIC without spaces: \n ");
 			String bic = sc.nextLine();
 			
+			while (bic.length() != 11) {
+				System.out.println("BIC must be 11 characters long.");
+				System.out.println("Enter new employee's BIC without spaces: \n ");
+				bic = sc.nextLine();
+			};
+			
 			System.out.println("Enter new employee's starting salary like 12000.0: \n"); 
-			float salary = sc.nextFloat();
+			float salary = -1;
+			
+			try {
+				 salary = sc.nextFloat();
+			}
+			catch(Exception e)
+			{
+				System.out.println("Invalid number entered must be a two digit decimal number.");
+				runInterface();
+			}
+			
+			while (salary < 0.0f) {
+				try {
+					 salary = sc.nextFloat();
+				}
+				catch(Exception e)
+				{
+					System.out.println("Invalid number entered must be a two digit decimal number.");
+					runInterface();
+				}
+			}
 			
 			newEmp = new Employee(salary,name,ninum,address,iban, bic);
 			employees.add(newEmp);
@@ -95,6 +165,11 @@ public class AppMain {
 			//SQL stuff
 			try {
 				addUser(newEmp);
+			} catch (SQLIntegrityConstraintViolationException e) {
+				System.out.println("WARNING!");
+				System.out.println("This national insurance number is already in use!");
+				System.out.println("");
+				runInterface();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -118,6 +193,8 @@ public class AppMain {
 		sc.close();
 	}
 	
+
+
 	private static void login() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter users id:");
@@ -168,9 +245,9 @@ public class AppMain {
 		String query = "INSERT INTO employee (name, address, NiN, iBan, bic, salary, department)\n" + 
 		"VALUES ('" + newEmp.getName() + "', '" + newEmp.getAddress() + "', '" + newEmp.getNationalInsurance() + "', '" + newEmp.getIban() + "', '"
 				+ newEmp.getBic() + "', " + newEmp.getSalary() + ", 'hr');";
-		System.out.println(query);
+//		System.out.println(query);
 		int success = st.executeUpdate(query);
-		System.out.println(success);
+//		System.out.println(success);
 	}
 
 	// gets list of employees from sql (CHANGE) 
