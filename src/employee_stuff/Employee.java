@@ -12,7 +12,7 @@ public class Employee implements IPayable, Comparable<Employee> {
 	private String bankDetails;
 	private String iban;
 	private String bic;
-	private Department department;
+	private DepartmentEnum department;
 	
 	private final int MIN_SALARY = 7000;
 	
@@ -144,11 +144,11 @@ public class Employee implements IPayable, Comparable<Employee> {
 		this.bankDetails = bankDetails;
 	}
 
-	public Department getDepartment() {
+	public DepartmentEnum getDepartment() {
 		return department;
 	}
 
-	public void setDepartment(Department department) {
+	public void setDepartment(DepartmentEnum department) {
 		this.department = department;
 	}
 
