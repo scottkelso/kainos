@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,7 +59,7 @@ public class AppMain {
 		
 		// Basic I/O for spike demo
 		System.out.println("Welcome to the sprint 1 demo!\n\n");
-		System.out.println("Select option \n1 - Add new employee \n2 - Department Report\n3 - exit");
+		System.out.println("Select option \n1 - Add new employee \n2 - Department Report\n3 - exit \n4 - Login \n5 - See earnings \n6 - Add sales employee \n7 - See highest earning sales employee");
 		getEmployees(conn);
 				
 		//input 
@@ -84,22 +85,87 @@ public class AppMain {
 			System.out.println("Enter new employee's National insurance number without spaces: \n");
 			String ninum = sc.nextLine();
 			
+
+//			while (ninum.length() > 34 || !checkNiNUniquness(ninum)) {
+//				if (ninum.length() > 34) {
+//					System.out.println("National insurence number has to be between 8 and 13 characters and must have the correct suffix letter.");
+//				} else if (!checkNiNUniquness(ninum)) {
+//					System.out.println("That national insurance number is not unique!");
+//				}
+//				System.out.println("Enter new employee's National insurance number without spaces: \n");
+//				ninum = sc.nextLine();
+//			};
+//			
+			while (ninum.length() > 34) {
+				System.out.println("National insurence number has to be between 8 and 13 characters and must have the correct suffix letter.");
+				System.out.println("Enter new employee's National insurance number without spaces: \n");
+				ninum = sc.nextLine();
+			};
+			
+			
+			
 			System.out.println("Enter new employee's IBAN without spaces: \n ");
 			String iban = sc.nextLine();
 			
+//			while (iban.length() > 34 || !checkIbanUniquness(iban)) {
+//				if (iban.length() > 34) {
+//					System.out.println("IBAN must be 34 characters long");
+//				} else if (!checkIbanUniquness(iban)) {
+//					System.out.println("That IBAN code number is not unique!");
+//				}
+//				System.out.println("Enter new employee's IBAN without spaces: \n ");
+//				iban = sc.nextLine();
+//			};
+			
+			while (iban.length() > 34) {
+				System.out.println("IBAN must be 34 characters long");
+				System.out.println("Enter new employee's IBAN without spaces: \n ");
+				iban = sc.nextLine();
+			};
+			
+
 			System.out.println("Enter new employee's BIC without spaces: \n ");
 			String bic = sc.nextLine();
 			
 			System.out.println("Enter new employee's starting salary like 12000.0: \n"); 
-			float salary = sc.nextFloat();
+			float salary = -1;
+			
+			try {
+				 salary = sc.nextFloat();
+			}
+			catch(Exception e)
+			{
+				System.out.println("Invalid number entered must be a two digit decimal number.");
+				runInterface();
+			}
+			
+			while (salary < 0.0f && salary > 1e8) {
+				try {
+					 salary = sc.nextFloat();
+				}
+				catch(Exception e)
+				{
+					System.out.println("Invalid number entered must be a two digit decimal number less than 100 million.");
+					runInterface();
+				}
+			}
+
 			
 			newEmp = new Employee(salary,name,ninum,address,iban, bic);
 			employees.add(newEmp);
 			System.out.println("New user details \n" + newEmp);
 			
+			
+			
 			//SQL stuff
 			try {
 				addUser(newEmp);
+			} catch (SQLIntegrityConstraintViolationException e) {
+				System.out.println("WARNING!");
+				System.out.println("The national insurance or IBAN code is already in use!");
+				System.out.println("");
+				e.printStackTrace();
+				runInterface();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -117,7 +183,33 @@ public class AppMain {
 		case 4:
 			login();
 		case 5:
-			System.out.println("Size: " + salesEmployee.size());
+			for(Employee e : employees)
+			{
+				if(e.getDepartment() != DepartmentEnum.SALES)
+				{
+					System.out.println("Employee: " + e.getName() + " earns £" + ((e.getSalary())* 0.3) + ".");
+				}
+			}
+			
+			for(SalesEmployee e : salesEmployee)
+			{
+				System.out.println("Employee: " + e.getName() + " earns £" + ((e.getSalary() + e.getSalesTotal() * e.getCommissionRate())* 0.3) + ".");
+			}
+			break;
+		case 7:
+			int highestEarned = 0; //array index
+			int current = 0;
+			for(SalesEmployee e : salesEmployee)
+			{
+				current ++;
+				if(e.getSalesTotal() > salesEmployee.get(0).getSalesTotal())
+				{
+					highestEarned = current;
+				}
+				
+			}
+			
+			System.out.println("Employee: " + salesEmployee.get(highestEarned).getName() + " earned the most at £" + salesEmployee.get(highestEarned).getSalesTotal() + " worth of sales.");
 			break;
 		case 6:
 			SalesEmployee newSalesEmp;
@@ -153,11 +245,41 @@ public class AppMain {
 
 		}
 		
+		
 		runInterface();
 		
 		sc.close();
 	}
-	
+
+
+
+	private static boolean checkIbanUniquness(String iban) {
+		try {
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE iBan = '" + iban + "';");
+			return (rs == null);
+		} catch (SQLException e) {
+			e.printStackTrace(); 
+		}
+		return false;
+	}
+
+	private static boolean checkNiNUniquness(String ninum) {
+		try {
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM employee WHERE NiN = '" + ninum + "';");
+			return (rs == null);
+		} catch (SQLException e) {
+			e.printStackTrace(); 
+		}
+		return false;
+	}
+
+	private static boolean ninVal(String ninum) {
+		String x = ninum.substring(ninum.length() - 1).toLowerCase();
+		return x.equals("a") || x.equals("b") || x.equals("c") || x.equals("d") || x.equals("f") || x.equals("m") || x.equals("p") ;
+	}
+
 	private static void login() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter users id:");
@@ -252,7 +374,6 @@ public class AppMain {
 			
 			for(Employee dbEmp : employees)
 			{
-				System.out.println("Department: " + dbEmp.getDepartment());
 				if(dbEmp.getDepartment() == DepartmentEnum.SALES)
 			    {
 			    	//SalesEmployee newSales = new (rs.getFloat("salary"), rs.getString("name"), rs.getString("NiN"), rs.getString("address"), rs.getString("iBan"), rs.getString("bic"));
