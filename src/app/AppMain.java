@@ -58,7 +58,7 @@ public class AppMain {
 		
 		// Basic I/O for spike demo
 		System.out.println("Welcome to the sprint 1 demo!\n\n");
-		System.out.println("Select option \n1 - Add new employee \n2 - Department Report\n3 - exit \n4. \n5.See earnings");
+		System.out.println("Select option \n1 - Add new employee \n2 - Department Report\n3 - exit \n4 - Login \n5 - See earnings \n6 - Add sales employee \n7 - See highest earning sales employee");
 		getEmployees(conn);
 				
 		//input 
@@ -130,7 +130,23 @@ public class AppMain {
 				System.out.println("Employee: " + e.getName() + " earns £" + ((e.getSalary() + e.getSalesTotal() * e.getCommissionRate())* 0.3) + ".");
 			}
 			break;
+		case 7:
+			int highestEarned = 0; //array index
+			int current = 0;
+			for(SalesEmployee e : salesEmployee)
+			{
+				current ++;
+				if(e.getSalesTotal() > salesEmployee.get(0).getSalesTotal())
+				{
+					highestEarned = current;
+				}
+				
+			}
+			
+			System.out.println("Employee: " + salesEmployee.get(highestEarned).getName() + " earned the most at £" + salesEmployee.get(highestEarned).getSalesTotal() + " worth of sales.");
+			break;
 		}
+		
 		
 		runInterface();
 		
