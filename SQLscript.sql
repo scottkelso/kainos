@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 DROP DATABASE TPS_database;
+=======
+DROP DATABSE IF EXISTAS TPS_database;
+>>>>>>> 51035cf8d4001ccb1345d9a7f3cd2da74018fbad
 CREATE DATABASE TPS_database;
+USE TPS_database;
 
 USE TPS_database;
 
@@ -15,6 +20,7 @@ CREATE TABLE employee (
     department enum('sales', 'finance', 'hr', 'developer')
 );
 
+<<<<<<< HEAD
 INSERT INTO employee (name, address, NiN, iBan, bic, salary, department)
 VALUES ("Joe smith", "31, linkin avenue, Belfast, BT21 7HN", "BC 13 14 19 c", "1234567890qwertyuiopasdf", "NAIAGB21", 25000.00, "sales"),
 	("Fred boy", "somewhere", "QE132445c", "asdfhjklwqeurihj123", "MDLNDGB34", 30000.00, "developer"),
@@ -32,6 +38,12 @@ BEGIN
 END //
 
 DELIMITER ;
+=======
+--DROP USER IF EXISTS 'admin'@'localhost';
+--create user 'admin'@'localhost' identified with mysql_native_password by '****';
+--grant all on TPS_database.* to admin@localhost;
+
+>>>>>>> 51035cf8d4001ccb1345d9a7f3cd2da74018fbad
 -- sales employee table
 
 -- project table
