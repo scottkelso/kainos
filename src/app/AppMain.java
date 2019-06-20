@@ -58,7 +58,7 @@ public class AppMain {
 		
 		// Basic I/O for spike demo
 		System.out.println("Welcome to the sprint 1 demo!\n\n");
-		System.out.println("Select option \n1 - Add new employee \n2 - Department Report\n3 - exit");
+		System.out.println("Select option \n1 - Add new employee \n2 - Department Report\n3 - exit \n4. \n5.See earnings");
 		getEmployees(conn);
 				
 		//input 
@@ -117,7 +117,18 @@ public class AppMain {
 		case 4:
 			login();
 		case 5:
-			System.out.println("Size: " + salesEmployee.size());
+			for(Employee e : employees)
+			{
+				if(e.getDepartment() != DepartmentEnum.SALES)
+				{
+					System.out.println("Employee: " + e.getName() + " earns £" + ((e.getSalary())* 0.3) + ".");
+				}
+			}
+			
+			for(SalesEmployee e : salesEmployee)
+			{
+				System.out.println("Employee: " + e.getName() + " earns £" + ((e.getSalary() + e.getSalesTotal() * e.getCommissionRate())* 0.3) + ".");
+			}
 			break;
 		}
 		
@@ -203,7 +214,6 @@ public class AppMain {
 			
 			for(Employee dbEmp : employees)
 			{
-				System.out.println("Department: " + dbEmp.getDepartment());
 				if(dbEmp.getDepartment() == DepartmentEnum.SALES)
 			    {
 			    	//SalesEmployee newSales = new (rs.getFloat("salary"), rs.getString("name"), rs.getString("NiN"), rs.getString("address"), rs.getString("iBan"), rs.getString("bic"));
