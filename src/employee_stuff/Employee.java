@@ -5,6 +5,10 @@ public class Employee implements IPayable, Comparable<Employee> {
 	private int number;
 	private float salary;
 	private String name;
+	private String nationalInsurance;
+	private String address;
+	private String bankDetails;
+	
 	private final int MIN_SALARY = 7000;
 	
 	public Employee() {
@@ -20,14 +24,17 @@ public class Employee implements IPayable, Comparable<Employee> {
 		setSalary(salary);
 	}
 	
-	public Employee(int number, float salary, String name) {
+	public Employee(int number, float salary, String name, String nationalInsurance, String address, String bankDetails) {
 		this(number, salary);
 		setName(name);
+		setNationalInsurance(nationalInsurance);
+		setAddress(address);
+		setBankDetails(bankDetails);
 	}
 	
-	public Employee(Employee emp) {
+	/*public Employee(Employee emp) {
 		this(emp.getNumber(), emp.getSalary(), emp.getName());
-	}
+	}*/
 	
 	public float calcPay() {
 		return this.salary / 12.0f;
@@ -98,6 +105,30 @@ public class Employee implements IPayable, Comparable<Employee> {
 	@Override
 	public int compareTo(Employee x) {
 		return Float.compare(this.getSalary(), x.getSalary());
+	}
+
+	public String getNationalInsurance() {
+		return nationalInsurance;
+	}
+
+	public void setNationalInsurance(String nationalInsurance) {
+		this.nationalInsurance = nationalInsurance;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getBankDetails() {
+		return bankDetails;
+	}
+
+	public void setBankDetails(String bankDetails) {
+		this.bankDetails = bankDetails;
 	}
 	
 }

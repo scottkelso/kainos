@@ -2,7 +2,7 @@ package employee_stuff;
 
 public class SalesEmployee extends Employee {
 	
-	private float commissionRate, salesTotal;
+	/*private float commissionRate, salesTotal;
 
 	public SalesEmployee() {
 		setupSalesEmployee();
@@ -71,6 +71,6 @@ public class SalesEmployee extends Employee {
 		} else {
 			return false;
 		}
-	}
+	}*/
 
 }
