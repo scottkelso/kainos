@@ -48,6 +48,10 @@ CREATE TABLE project (
 		REFERENCES employee(`employeeID`)
 );
 
+INSERT INTO project (projectName, projectManager)
+VALUES ("The first project", 3),
+		("The second project", 2);
+
 CREATE TABLE employee_project (
 	employeeID INT UNSIGNED,
     projectID INT UNSIGNED,
@@ -59,10 +63,16 @@ CREATE TABLE employee_project (
 		REFERENCES project(`projectID`)
 );
 
-CREATE TABLE Previous_Employee_Project (
+INSERT INTO employee_project (employeeID, projectID)
+VALUES (3, 2),
+		(4, 1),
+        (1, 2),
+        (3, 1);
+
+CREATE TABLE previous_employee_project (
 	employeeID INT unsigned,
     projectID INT unsigned,
-    startDate DATE,
+    startDate DATETIME,
 	finishDate DATETIME DEFAULT NOW(),
     PRIMARY KEY(`employeeID`, `projectID`, `startDate`),
     FOREIGN KEY(`employeeID`)
@@ -70,6 +80,7 @@ CREATE TABLE Previous_Employee_Project (
 	FOREIGN KEY(`projectID`)
 		REFERENCES project(`projectID`)
 );
+
 
 
 -- POSSIBLE: department table
@@ -112,6 +123,12 @@ BEGIN
 END; //
 
 DELIMITER ;
+
+DELETE FROM employee_project
+WHERE employeeID = 4 and projectID = 1;
+
+DELETE FROM employee_project
+WHERE employeeID = 3 and projectID = 2;
 
 -- DROP USER IF EXISTS 'admin'@'localhost';
 -- create user 'admin'@'localhost' identified with mysql_native_password by '****';
