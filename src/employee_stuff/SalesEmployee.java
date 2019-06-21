@@ -4,8 +4,14 @@ public class SalesEmployee extends Employee {
 	
 	private float commissionRate, salesTotal;
 	
-	public SalesEmployee(float salary, String name, String nationalInsurance, String address, String iban, String bic) {
+	public SalesEmployee(float salary, String name, String nationalInsurance, String address, String iban, String bic, float commissionRate, float salesTotal) {
 		super(salary, name, nationalInsurance, address, iban, bic);
+		setCommissionRate(commissionRate);
+		setSalesTotal(salesTotal);
+	}
+	
+	public SalesEmployee(int number, float commissionRate, float salesTotal) {
+		super(number);
 		setCommissionRate(commissionRate);
 		setSalesTotal(salesTotal);
 	}
