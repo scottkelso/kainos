@@ -35,7 +35,7 @@ CREATE TABLE salesEmployee (
 
 ALTER TABLE salesEmployee
 ADD CONSTRAINT chk_sales
-	CHECK (salesTotal >= 0);
+	CHECK (salesTotal >= 0.00);
     
 INSERT INTO salesEmployee(employeeID, commissionRate, salesTotal)
 VALUES (1, 0.30, 60000.00); 
@@ -51,7 +51,7 @@ CREATE TABLE project (
 CREATE TABLE employee_project (
 	employeeID INT UNSIGNED,
     projectID INT UNSIGNED,
-    startDate DATE NOT NULL DEFAULT (CURRENT_DATE),
+    startDate DATETIME DEFAULT NOW(),
     PRIMARY KEY (`employeeID`, `projectID`),
     FOREIGN KEY (`employeeID`)
 		REFERENCES employee(`employeeID`),
@@ -62,8 +62,8 @@ CREATE TABLE employee_project (
 CREATE TABLE Previous_Employee_Project (
 	employeeID INT unsigned,
     projectID INT unsigned,
-    startDate DATE NOT NULL DEFAULT (CURRENT_DATE),
-	finishDate DATE NOT NULL DEFAULT (CURRENT_DATE),
+    startDate DATE,
+	finishDate DATETIME DEFAULT NOW(),
     PRIMARY KEY(`employeeID`, `projectID`, `startDate`),
     FOREIGN KEY(`employeeID`)
 		REFERENCES employee(`employeeID`),
@@ -86,7 +86,7 @@ BEGIN
 	SELECT department, COUNT(*) as employeeCount
     FROM employee 
     GROUP BY department;
-END //
+END; //
 
 CREATE PROCEDURE highestTotalSales ()
 BEGIN
@@ -95,23 +95,24 @@ BEGIN
     ON e.employeeID = se.employeeID
     ORDER BY se.salesTotal desc
     LIMIT 1;
-END //
+END; //
 
 CREATE PROCEDURE employeesInSales()
 BEGIN
 	SELECT e.employeeID
     FROM employee e
     WHERE department = "sales";
-END //
+END; //
 
 CREATE TRIGGER Tr_Delete_Employee_Project
 	BEFORE DELETE ON `employee_project` FOR each row
 BEGIN
 	INSERT INTO `previous_employee_project`(EmployeeID, ProjectID, StartDate, FinishDate)
     VALUES (OLD.employeeID, OLD.projectID, OLD.startDate, Default);
-END //
+END; //
 
 DELIMITER ;
+
 -- DROP USER IF EXISTS 'admin'@'localhost';
 -- create user 'admin'@'localhost' identified with mysql_native_password by '****';
 -- grant all on TPS_database.* to admin@localhost;
