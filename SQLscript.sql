@@ -10,13 +10,9 @@ CREATE TABLE employee (
     NiN varchar(13) unique,
     iBan varchar(34) unique,
     bic varchar(11),
-    salary decimal(10,2),
+    salary decimal(10,2) unsigned,
     department enum('sales', 'finance', 'hr', 'developer')
 );
-
-ALTER TABLE employee
-ADD CONSTRAINT chk_salary
-	CHECK (salary > 0);
 
 INSERT INTO employee (name, address, NiN, iBan, bic, salary, department)
 VALUES ("Joe smith", "31, linkin avenue, Belfast, BT21 7HN", "BC 13 14 19 c", "1234567890qwertyuiopasdf", "NAIAGB21", 25000.00, "sales"),
@@ -28,17 +24,14 @@ VALUES ("Joe smith", "31, linkin avenue, Belfast, BT21 7HN", "BC 13 14 19 c", "1
 CREATE TABLE salesEmployee (
 	employeeID int unsigned PRIMARY KEY,
     commissionRate decimal (2,2),
-    salesTotal decimal (10,2),
+    salesTotal decimal (10,2) unsigned,
     FOREIGN KEY (`employeeID`)
 		references employee(`employeeID`)
 );
-
-ALTER TABLE salesEmployee
-ADD CONSTRAINT chk_sales
-	CHECK (salesTotal >= 0.00);
     
 INSERT INTO salesEmployee(employeeID, commissionRate, salesTotal)
 VALUES (1, 0.30, 60000.00); 
+
 -- project table
 CREATE TABLE project (
 	projectID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
